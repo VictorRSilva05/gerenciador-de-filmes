@@ -1,0 +1,52 @@
+<nav class="navbar navbar-dark navbar-expand-lg sticky-top app-fundo-navbar">
+  <div class="container py-1">
+    <a class="text-decoration-none" routerLink="/inicio">
+      <strong class="navbar-brand fs-3 text-light">APMDb</strong>
+    </a>
+    <button
+      class="navbar-toggler ms-auto"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapsibleMenu"
+      aria-controls="collapsibleMenu"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleMenu">
+      <div class="navbar-nav mt-4 mt-lg-0 ms-lg-auto">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle text-light fw-semibold"
+            role="button"
+            href="#"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Filmes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/movie/popular">Populares</a></li>
+            <li><a class="dropdown-item" routerLink="/movie/top-rated">Mais Votados</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle text-light fw-semibold"
+            role="button"
+            href="#"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Séries
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/tv/popular">Populares</a></li>
+            <li><a class="dropdown-item" routerLink="/tv/top-rated">Mais Votados</a></li>
+          </ul>
+        </li>
+      </div>
+    </div>
+  </div>
+</nav>

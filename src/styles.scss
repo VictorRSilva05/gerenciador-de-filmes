@@ -1,1 +1,183 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'bootstrap';
+@use 'bootstrap-icons';
+
+// Bootstrap
+.container {
+  max-width: 1200px !important;
+}
+
+.btn-group.rounded-pill {
+  border: 1px solid #6d2bc2f1;
+}
+
+.btn-group.rounded-pill .btn {
+  border-radius: 50rem !important;
+  transition: all 0.2s ease;
+
+  width: 100px;
+  height: 25px;
+  color: #6d2bc2f1;
+  font-size: 13px;
+}
+
+.btn-group.rounded-pill .btn-check:checked + .btn {
+  background-color: #6d2bc2f1;
+  color: #fff;
+  font-weight: 600;
+}
+
+// Geral
+.app-scrollbar-customizado {
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #ec6afa82;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #dddddd;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: #cfcfcf;
+    }
+  }
+}
+
+.app-background-gradiente {
+  background-image: linear-gradient(
+    to right,
+    rgb(248, 248, 248) calc((50vw - 170px) - 340px),
+    rgba(241, 213, 253, 0.84) 50%,
+    rgba(255, 236, 212, 0.84) 100%
+  );
+}
+
+// Navbar
+.app-fundo-navbar {
+  background-color: #6d2bc2f1;
+}
+
+.app-botao-navbar {
+  min-width: 130px;
+
+  text-align: center;
+  font-size: 17px;
+
+  &::after {
+    content: '';
+
+    width: 0px;
+    height: 1px;
+
+    display: block;
+    background: white;
+    transition: 300ms ease-in-out;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+// Busca
+.app-barra-busca {
+  background-color: #f8f9fa;
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// Listagem
+.app-banner-principal {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(
+      to right,
+      rgba(109, 43, 194, 0.95) 0%,
+      rgba(255, 236, 212, 0.4) 100%
+    ),
+    url('/background-home.webp');
+}
+
+.app-container-principal {
+  min-height: 360px;
+  padding-top: 6rem;
+}
+
+.app-porcentagem-nota {
+  background-color: #081c22;
+  color: #f3f3f3;
+
+  .app-valor-porcentagem {
+    &::after {
+      content: '%';
+
+      font-size: 9px;
+    }
+  }
+}
+
+.app-icone-absoluto {
+  position: absolute;
+
+  bottom: -10px;
+  right: 5px;
+}
+
+.app-borda-nota-mais-baixa {
+  border: 2px solid transparent;
+  border-top-color: #f62424;
+}
+
+.app-borda-nota-baixa {
+  border: 2px solid transparent;
+  border-top-color: #f62424;
+  border-right-color: #f62424;
+}
+
+.app-borda-nota-media {
+  border: 2px solid transparent;
+  border-top-color: #ffed23;
+  border-right-color: #ffed23;
+  border-bottom-color: #ffed23;
+}
+
+.app-borda-nota-alta {
+  border: 2px solid #3fe437;
+}
+
+.app-botao-gradiente {
+  border: none;
+
+  background: linear-gradient(to right, rgba(30, 213, 169, 1) 0%, rgba(1, 180, 228, 1) 100%);
+
+  color: #ffff;
+}
+
+.app-titulo-card {
+  &:hover {
+    color: #6d2bc2;
+  }
+}
+
+// Detalhes
+.app-banner-fundo {
+  background-color: rgba(0, 0, 0, 0.212);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.app-overlay-banner {
+  background-image: linear-gradient(
+    to right,
+    rgb(248, 248, 248) calc((50vw - 170px) - 340px),
+    rgba(241, 213, 253, 0.84) 50%,
+    rgba(255, 236, 212, 0.84) 100%
+  );
+}
