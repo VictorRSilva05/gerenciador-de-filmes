@@ -8,9 +8,11 @@
     <h2 class="fs-4 mb-0">Populares</h2>
 
     <div class="btn-group rounded-pill overflow-hidden" role="group">
-      <input (change)="mediasPopularesSubject$.next(tipoMedia.Filme)" checked="true" type="radio" class="btn-check" name="tipoMidiasPopulares" id="radioMidiasPopularesFilmes">
+      <input (change)="mediasPopularesSubject$.next(tipoMedia.Filme)" checked="true" type="radio" class="btn-check"
+        name="tipoMidiasPopulares" id="radioMidiasPopularesFilmes">
       <label for="radioMidiasPopularesFilmes" class="btn btn-sm btn-outline-primary border-0">Filmes</label>
-      <input (change)="mediasPopularesSubject$.next(tipoMedia.Tv)" type="radio" class="btn-check" name="tipoMidiasPopulares" id="radioMidiasPopularesTv">
+      <input (change)="mediasPopularesSubject$.next(tipoMedia.Tv)" type="radio" class="btn-check"
+        name="tipoMidiasPopulares" id="radioMidiasPopularesTv">
       <label for="radioMidiasPopularesTv" class="btn btn-sm btn-outline-primary border-0">TV</label>
     </div>
   </div>
@@ -18,6 +20,62 @@
 
   <div class="row flex-nowrap overflow-x-scroll g-3 my-2 app-scrollbar-customizado">
     @for (media of (mediasPopulares$ | async)?.results; track media.id){
+    <div class="col-5 col-md-2">
+      <div class="card rounded-3 app-card-filme">
+        <img class="card-img-top-rounded-3" style="min-height: 250px" [src]="media.poster_path"
+          [alt]="media.title ?? media.name">
+      </div>
+
+      <div class="mt-2">
+        <small class="text-muted">{{
+          media.release_date ?? media.first_air_date
+          }}</small>
+        <p class="app-titulo-card fw-bold">
+          {{ (media.title ?? media.name)?.slice(0,30) }}
+        </p>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="d-flex align-items-center gap-3 mt-4">
+    <h2 class="fs-4 mb-0">Mais Votados</h2>
+
+    <div class="btn-group rounded-pill overflow-hidden" role="group">
+      <input (change)="mediasMaisVotadasSubject$.next(tipoMedia.Filme)" checked="true" type="radio" class="btn-check"
+        name="tipoMidiasMaisVotadas" id="radioMidiasVotadasFilmes">
+      <label for="radioMidiasMaisVotadasFilmes" class="btn btn-sm btn-outline-primary border-0">Filmes</label>
+      <input (change)="mediasMaisVotadasSubject$.next(tipoMedia.Tv)" type="radio" class="btn-check"
+        name="tipoMidiasMaisVotadas" id="radioMidiasMaisVotadasTv">
+      <label for="radioMidiasMaisVotadasTv" class="btn btn-sm btn-outline-primary border-0">TV</label>
+    </div>
+  </div>
+
+
+  <div class="row flex-nowrap overflow-x-scroll g-3 my-2 app-scrollbar-customizado">
+    @for (media of (mediasMaisVotadas$ | async)?.results; track media.id){
+    <div class="col-5 col-md-2">
+      <div class="card rounded-3 app-card-filme">
+        <img class="card-img-top-rounded-3" style="min-height: 250px" [src]="media.poster_path"
+          [alt]="media.title ?? media.name">
+      </div>
+
+      <div class="mt-2">
+        <small class="text-muted">{{
+          media.release_date ?? media.first_air_date
+          }}</small>
+        <p class="app-titulo-card fw-bold">
+          {{ (media.title ?? media.name)?.slice(0,30) }}
+        </p>
+      </div>
+    </div>
+    }
+  </div>
+
+    <h2 class="fs-4 mb-0 mt-4">Filmes em Cartaz</h2>
+
+  <div class="row flex-nowrap overflow-x-scroll g-3 my-2 app-scrollbar-customizado">
+    @for (media of (filmesEmCartaz$ | async)?.results; track media.id){
     <div class="col-5 col-md-2">
       <div class="card rounded-3 app-card-filme">
         <img class="card-img-top-rounded-3" style="min-height: 250px" [src]="media.poster_path"

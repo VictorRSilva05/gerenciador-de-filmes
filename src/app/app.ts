@@ -18,8 +18,15 @@ export class App {
 
   protected readonly mediasPopularesSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
 
-    protected readonly mediasPopulares$ = this.mediasPopularesSubject$.pipe(
-      switchMap((tipo) => this.mediaService.selecionarMidiasPopulares(tipo))
-    );
+  protected readonly mediasPopulares$ = this.mediasPopularesSubject$.pipe(
+    switchMap((tipo) => this.mediaService.selecionarMidiasPopulares(tipo))
+  );
 
+  protected readonly mediasMaisVotadasSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
+
+  protected readonly mediasMaisVotadas$ = this.mediasMaisVotadasSubject$.pipe(
+    switchMap((tipo) => this.mediaService.selecionarMidiasMaisVotadas(tipo))
+  );
+
+  protected readonly filmesEmCartaz$ = this.mediaService.selecionarFilmesEmCartaz();
 }
