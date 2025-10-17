@@ -1,19 +1,25 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { Navbar } from "./components/navbar/navbar";
-import { BannerPrincipal } from "./components/banner-principal/banner-principal";
+import { Navbar } from './components/navbar/navbar';
+import { BannerPrincipal } from './components/banner-principal/banner-principal';
 import { MediaService } from './services/media-service';
+import { AsyncPipe } from '@angular/common';
+import { BehaviorSubject, Subject, switchMap, tap } from 'rxjs';
+import { TipoMedia } from './models/tipo-media';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, BannerPrincipal],
+  imports: [AsyncPipe, Navbar, BannerPrincipal],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
-export class App implements OnInit{
+export class App {
   protected readonly mediaService = inject(MediaService);
+  protected readonly tipoMedia = TipoMedia;
 
-    ngOnInit(): void {
-    this.mediaService.selecionarMidiasPopulares().subscribe(v => console.log(v));
-  }
+  protected readonly mediasPopularesSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
+
+    protected readonly mediasPopulares$ = this.mediasPopularesSubject$.pipe(
+      switchMap((tipo) => this.mediaService.selecionarMidiasPopulares(tipo))
+    );
+
 }
