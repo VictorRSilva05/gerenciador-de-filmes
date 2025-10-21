@@ -1,0 +1,111 @@
+@if (detalhes$ | async; as detalhes) {
+<div class="app-banner-fundo" [style.background-image]="'url(' + detalhes.backdrop_path + ')'">
+  <div class="app-overlay-banner">
+    <main class="container py-5">
+      <section aria-label="Detalhes do Filme" class="row justify-content-center g-5">
+        <div class="col-lg-3">
+          <img
+            [src]="detalhes.poster_path"
+            alt="Poster de {{ detalhes.title ?? detalhes.name }}"
+            class="img-fluid rounded-3"
+          />
+        </div>
+        <div class="col">
+          <header class="d-flex flex-wrap justify-content-between align-items-top gap-3">
+            <div>
+              <h1 class="mb-0">{{ detalhes.title ?? detalhes.name }}</h1>
+
+              <div class="d-flex flex-wrap align-items-center gap-3 fs-5">
+                <small>{{ detalhes.release_date ?? detalhes.first_air_date }}</small>
+
+                <span class="d-flex align-items-center gap-2">
+                  @for (genre of detalhes.genres; track genre.id) { •
+                  <small class="fw-semibold">{{ genre.name }}</small>
+                  }
+                </span>
+              </div>
+            </div>
+
+            @if (detalhes.vote_average > 0) {
+            <div class="d-flex align-items-center gap-2">
+              <app-icone-avaliacao
+                [avaliacao]="detalhes.vote_average"
+                [tamanhoPx]="45"
+              ></app-icone-avaliacao>
+              <span class="fw-semibold fs-5">Avaliação dos Usuários</span>
+            </div>
+            }
+          </header>
+
+          <article class="mt-4">
+            <h3>Sinopse</h3>
+
+            @if (detalhes.overview && detalhes.overview.length > 0) {
+            <p class="fs-5">{{ detalhes.overview }}</p>
+            } @else {
+            <p class="fs-5">Sinopse não disponível...</p>
+            }
+          </article>
+        </div>
+      </section>
+
+      @if ((videos$ | async)?.results; as videos) {
+
+      <hr class="mt-lg-4" />
+
+      <section class="mt-lg-3">
+        <h3>Trailer</h3>
+
+        @if (videos.at(0)) {
+        <div class="ratio ratio-16x9 mt-4">
+          <iframe class="rounded-4" [src]="videos.at(0)!.key" frameborder="0"></iframe>
+        </div>
+        } @else {
+        <span>Nenhum trailer disponível para visualização...</span>
+        }
+      </section>
+      }
+    </main>
+  </div>
+</div>
+} @if (creditos$ | async; as creditos) {
+<section class="container py-4">
+  <h4>Elenco Principal</h4>
+
+  <div class="row flex-nowrap overflow-x-scroll g-2 pb-3 mt-2 app-scrollbar-customizado">
+    @for (membroElenco of creditos.cast; track membroElenco.id) {
+    <div class="col-4 col-lg-2">
+      <div class="card rounded-3 h-100">
+        <img class="card-img-top" [src]="membroElenco.profile_path" [alt]="membroElenco.name" />
+
+        <div class="card-body px-2">
+          <p class="card-title fw-semibold mb-0">{{ membroElenco.name }}</p>
+
+          <small class="text-secondary text-wrap">{{ membroElenco.character }}</small>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</section>
+
+<section class="container py-4">
+  <h4>Produção</h4>
+
+  <div class="row flex-nowrap overflow-x-scroll g-2 pb-3 mt-2 app-scrollbar-customizado">
+    @for (membroProducao of creditos.crew; track membroProducao.id) {
+    <div class="col-4 col-lg-2">
+      <div class="card rounded-3 h-100">
+        <img class="card-img-top" [src]="membroProducao.profile_path" [alt]="membroProducao.name" />
+
+        <div class="card-body px-2">
+          <p class="card-title fw-semibold mb-0">{{ membroProducao.name }}</p>
+
+          <small class="text-secondary text-wrap">{{ membroProducao.job }}</small>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</section>
+}

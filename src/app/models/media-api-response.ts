@@ -1,4 +1,8 @@
+import { TipoMedia } from "./tipo-media";
+
 export interface MediaApiResponse{
+  media_type: TipoMedia;
+  type: TipoMedia;
   page: number;
   results: Media[];
   total_pages: number;

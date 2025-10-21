@@ -1,0 +1,21 @@
+<div class="row flex-nowrap overflow-x-scroll g-3 my-2 app-scrollbar-customizado">
+  @for (media of midias; track media.id){
+  <div class="col-7 col-lg-3 col-xl-2">
+    <a class="text-decoration-none text-dark" [routerLink]="['/',tipoMidia, media.id, 'detalhes']">
+      <div class="card rounded-3 app-card-filme">
+        <img class="card-img-top-rounded-3" style="min-height: 250px" [src]="media.poster_path"
+          [alt]="media.title ?? media.name">
+      </div>
+
+      <div class="mt-2">
+        <small class="text-muted">{{
+          media.release_date ?? media.first_air_date
+          }}</small>
+        <p class="app-titulo-card fw-bold">
+          {{ (media.title ?? media.name)?.slice(0,30) }}
+        </p>
+      </div>
+    </a>
+  </div>
+  }
+</div>

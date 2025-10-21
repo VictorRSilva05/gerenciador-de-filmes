@@ -1,21 +1,28 @@
+import { map, Observable } from 'rxjs';
+
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.development';
-import { MediaApiResponse } from '../models/media-api-response';
-import { map } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+
+import { environment } from '../../environments/environment';
 import { TipoMedia } from '../models/tipo-media';
+import { MediaApiResponse } from '../models/media-api-response';
+import { DetalhesMedia } from '../models/detalhes-media';
+import { VideosMediaApiResponse } from '../models/videos-media-api-response';
+import { traduzirTipoMidia } from '../util/traduzir-tipo-midia';
+import { CreditosMediaApiResponse } from '../models/creditos-media-api-response';
+
 
 @Injectable({
   providedIn: 'root',
 })
-export class MediaService {
+export class MidiaService {
   private readonly http = inject(HttpClient);
+  private readonly domSanitizer = inject(DomSanitizer);
   private readonly urlBase: string = 'https://api.themoviedb.org/3';
 
-  public selecionarMidiasPopulares(tipo: TipoMedia) {
-    const tipoTraduzido = tipo === 'filme' ? 'movie' : 'tv';
-
-    const urlCompleto = `${this.urlBase}/${tipoTraduzido}/popular?language=pt-BR`;
+  public selecionarMidiasPopulares(tipo: TipoMedia): Observable<MediaApiResponse> {
+    const urlCompleto = `${this.urlBase}/${traduzirTipoMidia(tipo)}/popular?language=pt-BR`;
 
     return this.http
       .get<MediaApiResponse>(urlCompleto, {
@@ -23,23 +30,11 @@ export class MediaService {
           Authorization: environment.apiKey,
         },
       })
-      .pipe(
-        map((x) => {
-          return {
-            ...x,
-            results: x.results.map((y) => ({
-              ...y,
-              poster_path: 'https://image.tmdb.org/t/p/w500' + y.poster_path,
-              backdrop_path: 'https://image.tmdb.org/t/p/original' + y.backdrop_path,
-            })),
-          };
-        })
-      );
+      .pipe(map((res) => this.mapearMidia(res, tipo)));
   }
-  public selecionarMidiasMaisVotadas(tipo: TipoMedia) {
-    const tipoTraduzido = tipo === 'filme' ? 'movie' : 'tv';
 
-    const urlCompleto = `${this.urlBase}/${tipoTraduzido}/top_rated?language=pt-BR`;
+  public selecionarMidiasMaisVotadas(tipo: TipoMedia): Observable<MediaApiResponse> {
+    const urlCompleto = `${this.urlBase}/${traduzirTipoMidia(tipo)}/top_rated?language=pt-BR`;
 
     return this.http
       .get<MediaApiResponse>(urlCompleto, {
@@ -47,21 +42,10 @@ export class MediaService {
           Authorization: environment.apiKey,
         },
       })
-      .pipe(
-        map((x) => {
-          return {
-            ...x,
-            results: x.results.map((y) => ({
-              ...y,
-              poster_path: 'https://image.tmdb.org/t/p/w500' + y.poster_path,
-              backdrop_path: 'https://image.tmdb.org/t/p/original' + y.backdrop_path,
-            })),
-          };
-        })
-      );
+      .pipe(map((res) => this.mapearMidia(res, tipo)));
   }
 
-  public selecionarFilmesEmCartaz() {
+  public selecionarFilmesEmCartaz(): Observable<MediaApiResponse> {
     const urlCompleto = `${this.urlBase}/movie/now_playing?language=pt-BR`;
 
     return this.http
@@ -70,19 +54,120 @@ export class MediaService {
           Authorization: environment.apiKey,
         },
       })
-      .pipe(
-       map(this.mapImages)
-      );
+      .pipe(map(this.mapearFilme));
   }
 
-  private mapImages(x: MediaApiResponse) : MediaApiResponse{
-    return{
+  public selecionarDetalhesMidiaPorId(tipo: TipoMedia, idMidia: number): Observable<DetalhesMedia> {
+    const urlCompleto = `${this.urlBase}/${traduzirTipoMidia(tipo)}/${idMidia}?language=pt-BR`;
+
+    return this.http
+      .get<DetalhesMedia>(urlCompleto, {
+        headers: {
+          Authorization: environment.apiKey,
+        },
+      })
+      .pipe(map((res) => this.mapearDetalhesMidia(res, tipo)));
+  }
+
+  public selecionarVideosMidiaPorId(
+    tipo: TipoMedia,
+    idMidia: number
+  ): Observable<VideosMediaApiResponse> {
+    const urlCompleto = `${this.urlBase}/${traduzirTipoMidia(
+      tipo
+    )}/${idMidia}/videos?language=pt-BR`;
+
+    return this.http
+      .get<VideosMediaApiResponse>(urlCompleto, {
+        headers: {
+          Authorization: environment.apiKey,
+        },
+      })
+      .pipe(map((res) => this.mapearVideosMidia(res)));
+  }
+
+  public selecionarCreditosMidiaPorId(
+    tipo: TipoMedia,
+    idMidia: number
+  ): Observable<CreditosMediaApiResponse> {
+    const urlCompleto = `${this.urlBase}/${traduzirTipoMidia(
+      tipo
+    )}/${idMidia}/credits?language=pt-BR`;
+
+    return this.http
+      .get<CreditosMediaApiResponse>(urlCompleto, {
+        headers: {
+          Authorization: environment.apiKey,
+        },
+      })
+      .pipe(map(this.mapearCreditosMidia));
+  }
+
+  private mapearMidia(x: MediaApiResponse, tipo: TipoMedia): MediaApiResponse {
+    return {
       ...x,
+      media_type: tipo,
       results: x.results.map((y) => ({
         ...y,
+        vote_average: y.vote_average * 10,
         poster_path: 'https://image.tmdb.org/t/p/w500' + y.poster_path,
-        backdrop_path: 'https://image.tmdb.org/t/p/original' + y.backdrop_path
-      }))
-    }
+        backdrop_path: 'https://image.tmdb.org/t/p/original' + y.backdrop_path,
+      })),
+    };
+  }
+
+  private mapearFilme(x: MediaApiResponse): MediaApiResponse {
+    return {
+      ...x,
+      media_type: TipoMedia.Filme,
+      results: x.results.map((y) => ({
+        ...y,
+        vote_average: y.vote_average * 10,
+        poster_path: 'https://image.tmdb.org/t/p/w500' + y.poster_path,
+        backdrop_path: 'https://image.tmdb.org/t/p/original' + y.backdrop_path,
+      })),
+    };
+  }
+
+  private mapearDetalhesMidia(x: DetalhesMedia, tipo: TipoMedia): DetalhesMedia {
+    return {
+      ...x,
+      media_type: tipo,
+      vote_average: x.vote_average * 10,
+      poster_path: 'https://image.tmdb.org/t/p/w500/' + x.poster_path,
+      backdrop_path: 'https://image.tmdb.org/t/p/original/' + x.backdrop_path,
+    };
+  }
+
+  private mapearVideosMidia(x: VideosMediaApiResponse): VideosMediaApiResponse {
+    return {
+      ...x,
+      results: x.results
+        .filter((v) => v.site.toLowerCase() === 'youtube')
+        .map((v) => ({
+          ...v,
+          key: this.domSanitizer.bypassSecurityTrustResourceUrl(
+            'https://www.youtube.com/embed/' + v.key
+          ),
+        })),
+    };
+  }
+
+  private mapearCreditosMidia(x: CreditosMediaApiResponse): CreditosMediaApiResponse {
+    return {
+      ...x,
+      cast: x.cast.map((y) => ({
+        ...y,
+        profile_path: y.profile_path
+          ? 'https://image.tmdb.org/t/p/w300/' + y.profile_path
+          : '/img/placeholder-person.webp',
+      })),
+      crew: x.crew.map((y) => ({
+        ...y,
+        profile_path: y.profile_path
+          ? 'https://image.tmdb.org/t/p/w300/' + y.profile_path
+          : '/img/placeholder-person.webp',
+      })),
+    };
   }
 }

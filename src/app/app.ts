@@ -1,32 +1,13 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { Navbar } from './components/navbar/navbar';
-import { BannerPrincipal } from './components/banner-principal/banner-principal';
-import { MediaService } from './services/media-service';
-import { AsyncPipe } from '@angular/common';
-import { BehaviorSubject, Subject, switchMap, tap } from 'rxjs';
-import { TipoMedia } from './models/tipo-media';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [AsyncPipe, Navbar, BannerPrincipal],
+  imports: [Navbar, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected readonly mediaService = inject(MediaService);
-  protected readonly tipoMedia = TipoMedia;
 
-  protected readonly mediasPopularesSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
-
-  protected readonly mediasPopulares$ = this.mediasPopularesSubject$.pipe(
-    switchMap((tipo) => this.mediaService.selecionarMidiasPopulares(tipo))
-  );
-
-  protected readonly mediasMaisVotadasSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
-
-  protected readonly mediasMaisVotadas$ = this.mediasMaisVotadasSubject$.pipe(
-    switchMap((tipo) => this.mediaService.selecionarMidiasMaisVotadas(tipo))
-  );
-
-  protected readonly filmesEmCartaz$ = this.mediaService.selecionarFilmesEmCartaz();
 }
