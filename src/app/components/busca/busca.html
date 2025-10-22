@@ -1,0 +1,45 @@
+<div class="container my-4">
+  <h1>Busca por "{{ queryParam$ | async }}"</h1>
+
+  <h3 class="mt-4">Filmes</h3>
+
+  @if (filmesSelecionados$ | async; as filmes) {
+  <div class="row g-3 mt-2">
+    @for (filme of filmes; track filme.id) {
+    <div class="col-7 col-lg-3 col-xl-2">
+      <app-card-midia [tipoMidia]="filme.media_type" [midia]="filme"></app-card-midia>
+    </div>
+    }
+  </div>
+  }
+
+  <hr />
+
+  <h3 class="mt-4">Séries</h3>
+
+  @if (seriesSelecionadas$ | async; as series) {
+  <div class="row g-3 mt-2">
+    @for (serie of series; track serie.id) {
+    <div class="col-7 col-lg-3 col-xl-2">
+      <app-card-midia [tipoMidia]="serie.media_type" [midia]="serie"></app-card-midia>
+    </div>
+    }
+  </div>
+  } @if (paginasDisponiveis$ | async; as paginasDisponiveis) {
+  <section id="paginacao" class="row justify-content-center gap-2 mt-2 g-2">
+    @for (pagina of paginasDisponiveis.paginas; track $index) {
+    <button
+      style="min-width: 33px"
+      class="col-auto btn btn-sm rounded-circle"
+      (click)="paginaSubject$.next(pagina)"
+      [ngClass]="{
+        'btn-outline-primary': paginasDisponiveis.paginaAtual !== pagina,
+        'btn-primary': paginasDisponiveis.paginaAtual === pagina
+      }"
+    >
+      {{ pagina }}
+    </button>
+    }
+  </section>
+  }
+</div>

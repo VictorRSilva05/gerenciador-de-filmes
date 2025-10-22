@@ -22,6 +22,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/listagem-midia/listagem-midia').then((c) => c.ListagemMidia),
   },
+  {
+    path: 'busca',
+    loadComponent: () => import('./components/busca/busca').then((c) => c.Busca),
+  },
 ];
 
 export const appConfig: ApplicationConfig = {

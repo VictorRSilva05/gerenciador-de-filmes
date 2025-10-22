@@ -1,0 +1,29 @@
+<div class="bg-light">
+  <div class="container py-1">
+    <div class="row g-2 align-items-center">
+      <div class="col-lg-10">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-search"></i>
+          <input
+            class="w-100 p-2 fst-italic app-barra-busca"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Buscar por um filme ou série de TV"
+            id="busca"
+            [(ngModel)]="inputBusca"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+      </div>
+      <button
+        [hidden]="!inputBusca"
+        (click)="onSearch()"
+        class="col btn rounded-4 app-botao-gradiente"
+      >
+        Pesquisar
+        <i class="ms-2 bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
