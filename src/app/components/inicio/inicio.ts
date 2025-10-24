@@ -1,32 +1,36 @@
-import { Component, inject } from '@angular/core';
-import { BannerPrincipal } from '../banner-principal/banner-principal';
-import { CarosselMidias } from '../shared/carossel-midias/carossel-midias';
-import { BehaviorSubject, switchMap } from 'rxjs';
-import { TipoMedia } from '../../models/tipo-media';
-import { MediaService } from '../../services/media-service';
+import { BehaviorSubject, refCount, shareReplay, switchMap } from 'rxjs';
+
 import { AsyncPipe } from '@angular/common';
-import { Navbar } from '../navbar/navbar';
+import { Component, inject } from '@angular/core';
+import { TipoMedia } from '../../models/tipo-media';
+import { BannerPrincipal } from '../banner-principal/banner-principal';
+import { SelecaoCarrosselMidias } from '../shared/carossel-midias/selecao-carrosel-midias/selecao-carrosel-midias';
+
+import { MidiaService } from '../../services/media-service';
+import { CarrosselMidias } from '../shared/carossel-midias/carossel-midias';
+
 
 @Component({
   selector: 'app-inicio',
-  imports: [BannerPrincipal, CarosselMidias, AsyncPipe, BannerPrincipal],
+  imports: [AsyncPipe, BannerPrincipal, SelecaoCarrosselMidias, CarrosselMidias],
   templateUrl: './inicio.html',
 })
 export class Inicio {
-  protected readonly mediaService = inject(MediaService);
-  protected readonly tipoMedia = TipoMedia;
+  protected readonly midiaService = inject(MidiaService);
+  protected readonly tipoMidia = TipoMedia;
 
-  protected readonly mediasPopularesSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
+  protected readonly midiasPopularesSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
+  protected readonly midiasMaisVotadasSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
 
-  protected readonly mediasPopulares$ = this.mediasPopularesSubject$.pipe(
-    switchMap((tipo) => this.mediaService.selecionarMidiasPopulares(tipo))
+  protected readonly midiasPopulares$ = this.midiasPopularesSubject$.pipe(
+    switchMap((tipo) => this.midiaService.selecionarMidiasPopulares(tipo)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  protected readonly mediasMaisVotadasSubject$ = new BehaviorSubject<TipoMedia>(TipoMedia.Filme);
-
-  protected readonly mediasMaisVotadas$ = this.mediasMaisVotadasSubject$.pipe(
-    switchMap((tipo) => this.mediaService.selecionarMidiasMaisVotadas(tipo))
+  protected readonly midiasMaisVotadas$ = this.midiasMaisVotadasSubject$.pipe(
+    switchMap((tipo) => this.midiaService.selecionarMidiasMaisVotadas(tipo)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  protected readonly filmesEmCartaz$ = this.mediaService.selecionarFilmesEmCartaz();
+  protected readonly filmesEmCartaz$ = this.midiaService.selecionarFilmesEmCartaz();
 }

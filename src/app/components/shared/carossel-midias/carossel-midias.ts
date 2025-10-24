@@ -6,7 +6,7 @@ import { CardMidia } from "../../card-midia/card-midia";
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-carossel-midias',
+  selector: 'app-carrossel-midias',
   imports: [NgClass, CardMidia],
    template: `
     <div
@@ -21,7 +21,7 @@ import { NgClass } from '@angular/common';
     </div>
   `,
 })
-export class CarosselMidias {
+export class CarrosselMidias {
   @Input({ required: true }) public tipoMidia: TipoMedia = TipoMedia.Filme;
   @Input({ required: true }) public midias: Media[] = [];
   @Input({ required: false }) public popular: boolean = false;

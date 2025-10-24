@@ -1,47 +1,58 @@
 <app-banner-principal></app-banner-principal>
 
-<div class="container py-4">
-@if(mediasPopulares$ |async; as respostaMidiasPopulares){
-<div class="d-flex align-items-center gap-3">
+<!-- Mídias Populares -->
+<div class="container py-3">
+  <div class="d-flex align-items-center gap-3">
     <h2 class="fs-4 mb-0">Populares</h2>
 
-    <div class="btn-group rounded-pill overflow-hidden" role="group">
-      <input (change)="mediasPopularesSubject$.next(tipoMedia.Filme)" checked="true" type="radio" class="btn-check"
-        name="tipoMidiasPopulares" id="radioMidiasPopularesFilmes">
-      <label for="radioMidiasPopularesFilmes" class="btn btn-sm btn-outline-primary border-0">Filmes</label>
-      <input (change)="mediasPopularesSubject$.next(tipoMedia.Tv)" type="radio" class="btn-check"
-        name="tipoMidiasPopulares" id="radioMidiasPopularesTv">
-      <label for="radioMidiasPopularesTv" class="btn btn-sm btn-outline-primary border-0">TV</label>
-    </div>
+    <app-selecao-carrossel-midias
+      idAgrupamento="midiasPopulares"
+      nomeAgrupamento="tipoMidiasPopulares"
+      [tipoMidiaSelecionado]="(midiasPopularesSubject$ | async) ?? tipoMidia.Filme"
+      (tipoMidiaAlterado)="midiasPopularesSubject$.next($event)"
+    ></app-selecao-carrossel-midias>
   </div>
 
-    <app-carossel-midias [tipoMidia]="respostaMidiasPopulares.type" [midias]="respostaMidiasPopulares.results"></app-carossel-midias>
-
-}
-
-
-  @if(mediasMaisVotadas$ |async; as respostaMidiasMaisVotadas)
-  {
-      <div class="d-flex align-items-center gap-3 mt-4">
-    <h2 class="fs-4 mb-0">Mais Votados</h2>
-
-    <div class="btn-group rounded-pill overflow-hidden" role="group">
-      <input (change)="mediasMaisVotadasSubject$.next(tipoMedia.Filme)" checked="true" type="radio" class="btn-check"
-        name="tipoMidiasMaisVotadas" id="radioMidiasVotadasFilmes">
-      <label for="radioMidiasMaisVotadasFilmes" class="btn btn-sm btn-outline-primary border-0">Filmes</label>
-      <input (change)="mediasMaisVotadasSubject$.next(tipoMedia.Tv)" type="radio" class="btn-check"
-        name="tipoMidiasMaisVotadas" id="radioMidiasMaisVotadasTv">
-      <label for="radioMidiasMaisVotadasTv" class="btn btn-sm btn-outline-primary border-0">TV</label>
-    </div>
-  </div>
-
-    <app-carossel-midias [tipoMidia]="respostaMidiasMaisVotadas.type" [midias]="respostaMidiasMaisVotadas.results"></app-carossel-midias>
+  @if (midiasPopulares$ | async; as respostaMidiasPopulares) {
+  <app-carrossel-midias
+    [tipoMidia]="respostaMidiasPopulares.media_type"
+    [midias]="respostaMidiasPopulares.results"
+    [popular]="true"
+  ></app-carrossel-midias>
   }
+</div>
 
+<!-- Mídias Mais Votadas -->
+<div class="app-banner-fundo">
+  <div class="container py-3">
+    <div class="d-flex align-items-center gap-3">
+      <h2 class="fs-4 mb-0">Mais Votados</h2>
 
-  @if(filmesEmCartaz$ | async; as filmesEmCartaz)
-  {
-  <h2 class="fs-4 mb-0 mt-4">Filmes em Cartaz</h2>
-  <app-carossel-midias [tipoMidia]="tipoMedia.Filme" [midias]="filmesEmCartaz.results"></app-carossel-midias>
+      <app-selecao-carrossel-midias
+        idAgrupamento="midiasMaisVotados"
+        nomeAgrupamento="tipoMidiaMaisVotados"
+        [tipoMidiaSelecionado]="(midiasMaisVotadasSubject$ | async) ?? tipoMidia.Filme"
+        (tipoMidiaAlterado)="midiasMaisVotadasSubject$.next($event)"
+      ></app-selecao-carrossel-midias>
+    </div>
+
+    @if (midiasMaisVotadas$ | async; as respostaMidiasMaisVotadas) {
+    <app-carrossel-midias
+      [tipoMidia]="respostaMidiasMaisVotadas.media_type"
+      [midias]="respostaMidiasMaisVotadas.results"
+    ></app-carrossel-midias>
+    }
+  </div>
+</div>
+
+<!-- Filmes em Cartaz -->
+<div class="container py-3">
+  @if (filmesEmCartaz$ | async; as respostaFilmesEmCartaz) {
+  <h2 class="fs-4 mb-0">Filmes em Cartaz</h2>
+
+  <app-carrossel-midias
+    [tipoMidia]="tipoMidia.Filme"
+    [midias]="respostaFilmesEmCartaz.results"
+  ></app-carrossel-midias>
   }
 </div>

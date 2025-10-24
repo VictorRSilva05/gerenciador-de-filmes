@@ -187,13 +187,13 @@ export class MidiaService {
         ...y,
         profile_path: y.profile_path
           ? 'https://image.tmdb.org/t/p/w300/' + y.profile_path
-          : '/img/placeholder-person.webp',
+          : '/placeholder-person.webp',
       })),
       crew: x.crew.map((y) => ({
         ...y,
         profile_path: y.profile_path
           ? 'https://image.tmdb.org/t/p/w300/' + y.profile_path
-          : '/img/placeholder-person.webp',
+          : '/placeholder-person.webp',
       })),
     };
   }
